@@ -7,99 +7,51 @@ using System.Threading.Tasks;
 namespace CalculatorConsole
 {
 
-
-    public class Calculation
+    public class AssesmentFactors
     {
-        private string substance;
-        private double expi;
-        private double refi;
-        private double hazardCoefficient;
+        public int Human { get; set; } = 10;
+        public int Animal { get; set; } = 10;
+        public int Acute { get; set; } = 6;
+        public int Chronic { get; set; } = 1;
+        public int Intermediate { get; set; } = 2;
 
-        private bool resp;
-        private bool cardio;
-        private bool neur;
-        private bool carc;
-        private bool irr;
-
-
-        public Calculation(string substance, double expi, double refi, bool resp, bool cardio, bool neur, bool carc, bool irr, double hazardCoefficient)
-        {
-            this.substance = substance;
-            this.expi = expi;
-            this.refi = refi;
-            this.hazardCoefficient = hazardCoefficient;
-
-            this.resp = resp;
-            this.cardio = cardio;
-            this.neur = neur;
-            this.carc = carc;
-            this.irr = irr;;
-        }
-
-        public string Substance
-        {
-            get { return substance; }
-            set { substance = value; }
-        }
-
-        public double Expi
-        {
-            get { return expi; }
-            set { expi = value; }
-        }
-        
-        public double Refi
-        {
-            get { return refi; }
-            set { refi = value; }
-        }
-
-        public double HazardCoefficient
-        {
-            get { return hazardCoefficient; }
-            set { hazardCoefficient = value; }
-        }
-
-        public bool Resp
-        {
-            get { return resp; }
-            set { resp = value; }
-        }
-
-        public bool Cardio
-        {
-            get { return cardio; }
-            set { cardio = value; }
-        }
-
-        public bool Neur
-        {
-            get { return neur; }
-            set { neur = value; }
-        }
-
-        public bool Carc
-        {
-            get { return carc; }
-            set { carc = value; }
-        }
-
-        public bool Irr
-        {
-            get { return irr; }
-            set { irr = value; }
-        }
-
-        
     }
+
     class Program
     {
+        static int GetFactorSubstance(string substance)
+        {
+            AssesmentFactors factors = new AssesmentFactors();
+            switch (substance)
+            {
+                case "H":
+                    return factors.Human;
+                    break;
+                case "A":
+                    return factors.Animal;
+                    break;
+                case "AC":
+                    return factors.Acute;
+                    break;
+                case "CR":
+                    return factors.Chronic;
+                    break;
+                case "IM":
+                    return factors.Intermediate;
+                    break;         
+                default:
+                    return 0;
+                    break;
+            }
+        }
+
         static void Main(string[] args)
         {
             Console.OutputEncoding = Encoding.GetEncoding(866);
             Console.InputEncoding = Encoding.GetEncoding(866);
 
             Random random = new Random();
+            
            
 
             int countSubstance;
@@ -107,14 +59,23 @@ namespace CalculatorConsole
             double expi;
             double refi;
             double hazardCoefficient;
-            
+            double pod;
 
+            List<string> species = new List<string>() { "H", "A" };
+            List<string> length = new List<string>() { "AC", "CR", "IM" };
+
+            string speciesSubstance;
+            string lengthSubstance;
+
+            double durationStudyFactor = 1;
 
             bool resp; 
             bool cardio; 
             bool neur; 
             bool carc; 
             bool irr;
+
+          
 
 
             Console.Write("Введите количество веществ:\n");
@@ -123,13 +84,19 @@ namespace CalculatorConsole
             List<Calculation> calculations = new List<Calculation>();
             for (int i = 0; i < countSubstance; i++)
             {
-                Console.Write("Введите " + i + " название вещества:\n");
-                substance = Convert.ToString(Console.ReadLine());
+                
+                substance = "Вещество №" + i;
+              
+                expi = Convert.ToDouble(random.Next(10));
 
-                Console.Write("Введите измеренную концентрацию для " + i + " вещества(expi):\n");
-                expi = Convert.ToDouble(Console.ReadLine());
+                refi = Convert.ToDouble(random.Next(10));
 
-                refi = 20;
+                pod = Convert.ToDouble(random.Next(10000));
+
+                speciesSubstance = species[Convert.ToInt32(random.Next(species.Count))];
+
+                lengthSubstance = length[Convert.ToInt32(random.Next(length.Count))];
+
 
                 resp = random.Next(10) < 4;
                 cardio = random.Next(10) < 4;
@@ -139,7 +106,7 @@ namespace CalculatorConsole
 
                 hazardCoefficient = expi / refi;
 
-                calculations.Add(new Calculation(substance, expi, refi, resp, cardio, neur, carc, irr, hazardCoefficient));
+                calculations.Add(new Calculation(substance, expi, refi, resp, cardio, neur, carc, irr, hazardCoefficient, pod, speciesSubstance, lengthSubstance));
 
                 Console.Write("\n\n");
 
@@ -150,12 +117,17 @@ namespace CalculatorConsole
                 Console.Write("Название вещества: " + calculation.Substance + "\n");
                 Console.Write("Измеренная концентрация вещества: " + calculation.Expi + "\n");
                 Console.Write("Контрольная концентрация вещества: " + calculation.Refi + "\n");
+                Console.Write("Pod: " + calculation.Pod + "\n");
+                Console.Write("Species: " + calculation.SpeciesSubstance + "\n");
+                Console.Write("Length: " + calculation.LengthSubstance + "\n");
                 Console.Write("Коэффициент опасности вещества: " + calculation.HazardCoefficient + "\n");
                 Console.Write("Респираторное значение: " + calculation.Resp + "\n");
                 Console.Write("Сердечно-сосудистое значение: " + calculation.Cardio + "\n");
                 Console.Write("Неврологическое значение: " + calculation.Neur + "\n");
                 Console.Write("Карцерогенное значение: " + calculation.Carc + "\n");
                 Console.Write("Раздражение глаз значение: " + calculation.Irr + "\n");
+
+                Console.Write("\nPod: " + calculation.Pod + "\n");
 
                 Console.Write("\n\n");
             }
@@ -166,37 +138,55 @@ namespace CalculatorConsole
             double hazardIndexNeur = 0;
             double hazardIndexCarc = 0;
             double hazardIndexIrr = 0;
-            
+
+
+            double podiResp = 0;
+            double podiCardio = 0;
+            double podiNeur = 0;
+            double podiCarc = 0;
+            double podiIrr = 0;
+
             foreach (Calculation calculation in calculations)
             {
                 hazardIndex += calculation.HazardCoefficient;
 
+                int factorSpecies = GetFactorSubstance(calculation.SpeciesSubstance);
+                int factorLength = GetFactorSubstance(calculation.LengthSubstance);
+
                 if (calculation.Resp)
-                {
+                {               
                     hazardIndexResp += calculation.HazardCoefficient;
+                    podiResp += calculation.Expi / (calculation.Pod / ((factorSpecies * factorLength) / durationStudyFactor));
+
                 }
 
                 if (calculation.Cardio)
                 {
                     hazardIndexCardio += calculation.HazardCoefficient;
+                    podiCardio += calculation.Expi / (calculation.Pod / ((factorSpecies * factorLength) / durationStudyFactor));
                 }
 
                 if (calculation.Neur)
                 {
                     hazardIndexNeur += calculation.HazardCoefficient;
+                    podiNeur += calculation.Expi / (calculation.Pod / ((factorSpecies * factorLength) / durationStudyFactor));
                 }
 
                 if (calculation.Carc)
                 {
                     hazardIndexCarc += calculation.HazardCoefficient;
+                    podiCarc += calculation.Expi / (calculation.Pod / ((factorSpecies * factorLength) / durationStudyFactor));
                 }
 
                 if (calculation.Irr)
                 {
                     hazardIndexIrr += calculation.HazardCoefficient;
+                    podiIrr += calculation.Expi / (calculation.Pod / ((factorSpecies * factorLength) / durationStudyFactor));
                 }
 
             }
+
+            
 
             Console.Write("Индекс опасности веществ: " + hazardIndex + "\n");
             Console.Write("Индекс опасности веществ по респираторным значениям: " + hazardIndexResp + "\n");
@@ -206,7 +196,14 @@ namespace CalculatorConsole
             Console.Write("Индекс опасности веществ по значениям раздражения глаз: " + hazardIndexIrr + "\n");
 
 
+            Console.Write("Podi по респираторным значениям: " + podiResp + "\n");
+            Console.Write("Podi по кардио-васкулярным значениям: " + podiCardio + "\n");
+            Console.Write("Podi по неврологическим значениям: " + podiNeur + "\n");
+            Console.Write("Podi по карцерогенным значениям: " + podiCarc + "\n");
+            Console.Write("Podi по значениям раздражения глаз: " + podiIrr + "\n");
+
             Console.ReadKey();
         }
+
     }
 }
